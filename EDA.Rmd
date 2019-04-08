@@ -1,6 +1,6 @@
 ---
 title: "EDA"
-author: "Rachel Yang"
+author: "Helen Lan & Rachel Yang"
 date: "4/7/2019"
 output: html_document
 ---
