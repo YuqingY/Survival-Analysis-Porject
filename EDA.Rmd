@@ -26,6 +26,52 @@ AIDS$SurvObj <- with( AIDS, Surv(time_d, censor == 0))
 km.AIDS <- survfit(SurvObj ~ 1, data = AIDS, conf.type = "log-log")
 autoplot(km.AIDS)
 ```
+
+Something New No.2: Deriving/detailing AIC&BIC for model seleciton on Cox PH (Helen)
+###AIC Method
+```{r, warning=FALSE}
+#Forward Selection using AIC 
+aids.aic <- coxph(Surv(time,censor == 1) ~ 1,data = AIDS)
+step(aids.aic, ~tx + txgrp + strat2 + sex + raceth + ivdrug + hemophil + karnof + cd4 + age + priorzdv, data = AIDS, direction = "forward", k=2)
+```
+
+At this step, forward selection using AIC suggests that the model without any additional variable will have the smallest AIC. So our result from forward selection using AIC indicates that we should include tx + ivdrug + karnof + cd4 + age in our model. 
+
+```{r, warning=FALSE}
+#Backward Selection using AIC 
+aids.aic <- coxph(Surv(time,censor == 1) ~ tx + txgrp + strat2 + sex + raceth + ivdrug + hemophil + karnof + cd4 + age + priorzdv,data = AIDS)
+step(aids.aic, ~tx + txgrp + strat2 + sex + raceth + ivdrug + hemophil + karnof + cd4 + age + priorzdv, data = AIDS, direction = "backward", k=2)
+```
+The result from backward selection using AIC indicates that we should include tx + ivdrug + karnof + cd4 + age in our model. 
+
+```{r}
+#Final model suggested by AIC:
+aids.aic1 <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age,data = AIDS)
+aids.aic1 %>% tidy()
+aids.aic1 %>% glance()
+```
+###BIC Method
+```{r, warning=FALSE}
+#Forward Selection using BIC
+dim(AIDS)
+aids.bic <- coxph(Surv(time,censor == 1) ~ 1,data = AIDS)
+step(aids.bic, ~tx + txgrp + strat2 + sex + raceth + ivdrug + hemophil + karnof + cd4 + age + priorzdv, data = AIDS, direction = "forward", k=log(135))
+```
+The result from forward selection using BIC indicates that we should include tx  + karnof + cd4 in our model.
+
+```{r, warning=FALSE}
+#Backward Selection using BIC
+aids.bic <- coxph(Surv(time,censor == 1) ~ tx + txgrp + strat2 + sex + raceth + ivdrug + hemophil + karnof + cd4 + age + priorzdv,data = AIDS)
+step(aids.bic, ~tx + txgrp + strat2 + sex + raceth + ivdrug + hemophil + karnof + cd4 + age + priorzdv, data = AIDS, direction = "backward", k=log(135))
+```
+The result from backward selection using BIC indicates that we should include tx  + karnof + cd4 in our model.
+
+```{r}
+#Final model suggested by BIC:
+aids.bic1 <- coxph(Surv(time,censor == 1) ~ tx + karnof + cd4,data = AIDS)
+aids.bic1 %>% tidy()
+aids.bic1 %>% glance()
+```
 Something New
 1. Investigation of PH assumption (Rachel)
 1.1 Introduction 
