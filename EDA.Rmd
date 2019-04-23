@@ -91,6 +91,14 @@ Something New
     interpretating of the result and deciding what to do with our model base on 
     the result.
 1.2 Testing the PH Assumption
+```{r}
+cox.zph(coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age, data = AIDS))
+ggsurvplot(survfit(Surv(time,censor == 1) ~ cd4grp, data = AIDS), fun = "cloglog")
+ggsurvplot(survfit(Surv(time,censor == 1) ~ karnof, data = AIDS), fun = "cloglog")
+ggsurvplot(survfit(Surv(time,censor == 1) ~ tx, data = AIDS), fun = "cloglog")
+ggsurvplot(survfit(Surv(time,censor == 1) ~ agegrp, data = AIDS), fun = "cloglog")
+ggsurvplot(survfit(Surv(time,censor == 1) ~ ivdrug, data = AIDS), fun = "cloglog")
+```
 1.3 Interpretation
 1.4 Actions
 
