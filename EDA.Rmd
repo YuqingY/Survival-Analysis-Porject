@@ -103,15 +103,17 @@ ggsurvplot(survfit(Surv(time,censor == 1) ~ ivdrug, data = AIDS), fun = "cloglog
 1.4 Actions
 
 2. Deriving/detailing AIC&BIC for model seleciton on Cox PH (Helen)
-2.1 Introduction
-2.1.1 Definition and mathematics of AIC & BIC
+
+2.1 Introduction (An overview of Christensen, 2018)
+  Akaike (1974) introduced the first information criterion, the Akaike Information
+Criterion (AIC). AIC was based on Kullback-Leibler (K-L) distance (Kullback & Leibler, 1951), which connected information is a way of conceptualizing the distance, or discrepancy, between two models: f(x), the “true” or “generating” model from which actual observations emerge, and g(x), a model given by the researcher to predict the population. K-L distance can be understood as the information lost
+when g(x) is used to approximate f(x). If g(x) is exactly the same as f(x), then the K-L distance between the two models is zero.In practice, the “true” model is unknown, so the absolute K-L distance between f(x) and g(x) is impossible to compute. Yet relative distances can be computed when we are evaluating two or more prediction models. Akaike’s (1974) key insight was that maximum likelihood estimation, with some correction based on the number of parameters in the model, is the expected K-L distance.
+
+2.1.1 Definition and derivation of AIC & BIC
     AIC: Akaike’s Information Criteria =  −2ln likelihood + 2p
     BIC: Bayesian Information Criteria =  −2ln likelihood + pln(n)
-    where p is the number of estimated parameters (the number of explanatory variables plus 1) and n is the
-    sample size. AIC and BIC measure the model's generalizability.Both techniques suggest choosing a model 
-    with the smallest AIC or BIC value. Information criteria in general measures the information lost when we use a
-    statistical model to approximate the true model. Thus, the less information is lost during this process, the better
-    the approximating model is. 
+    where p is the number of estimated parameters (the number of explanatory variables plus 1) and n is the sample size. Likelihood is evaluated at Maximum Likelihood Estimator. AIC and BIC measure the model's generalizability.Both techniques suggest choosing a model with the smallest AIC or BIC value. Information criteria in general measures the information lost when we use a statistical model to approximate the true model. Thus, the less information is lost during this process, the better the approximating model is. 
+    
 2.1.2 Resources
     I came to know this concept from our lecture's brief introduction to AIC and BIC when we talked about model building.
     I learned more about information criteria in model selection through Christensen(UCLA)'s publication
