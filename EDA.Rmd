@@ -14,10 +14,13 @@ library(ggfortify)
 library(survival)
 library(reshape2)
 library(ggplot2)
+library(survminer)
 ```
 
 ```{r, include=FALSE}
-AIDS <- read_csv("~/Desktop/Math150-Project/AIDSdata.csv")
+AIDS <- read_csv("~/Desktop/Survival-Analysis-Project/AIDSdata.csv")
+AIDS$cd4grp <- floor(AIDS$cd4/50)
+AIDS$agegrp <- floor(AIDS$age/10)
 ```
 ```{r}
 summary(AIDS$age)
@@ -91,8 +94,12 @@ Something New
     interpretating of the result and deciding what to do with our model base on 
     the result.
 1.2 Testing the PH Assumption
+To test the Proportional Harzard (PH) assumption, I use the cox.zph function in r. The cox.zph function will test proportionality of all the predictors in the model by creating interactions with time using the transformation of time specified in the transform option.
 ```{r}
 cox.zph(coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age, data = AIDS))
+```
+Acording to the ph
+```{r}
 ggsurvplot(survfit(Surv(time,censor == 1) ~ cd4grp, data = AIDS), fun = "cloglog")
 ggsurvplot(survfit(Surv(time,censor == 1) ~ karnof, data = AIDS), fun = "cloglog")
 ggsurvplot(survfit(Surv(time,censor == 1) ~ tx, data = AIDS), fun = "cloglog")
