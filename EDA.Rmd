@@ -5,7 +5,7 @@ date: "4/7/2019"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r global_options, include=TRUE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(broom)
@@ -84,15 +84,13 @@ aids.bic1 %>% glance()
     My knowledge of the concept of PH Assumption mainly comes from class lectures. I will use r documentation(linked below) as well as the UCLA survival to learn about the cox.zph function.
     https://www.rdocumentation.org/packages/survival/versions/2.43-3/topics/cox.zph
 #####1.1.3 Challenges
-    The first challenge is figuring out the r code. The second challenge is 
-    interpretating of the result and deciding what to do with our model base on 
-    the result.          
+    The first challenge is figuring out the r code. The second challenge is interpretating of the result and deciding what to do with our model base on the result.          
 ####1.2 Testing the PH Assumption
-To test the Proportional Harzard (PH) assumption, I use the cox.zph function in r. The cox.zph function will test proportionality of all the predictors in the model by creating interactions with time using the transformation of time specified in the transform option.
+    To test the Proportional Harzard (PH) assumption, I use the cox.zph function in r. The cox.zph function will test proportionality of all the predictors in the model by creating interactions with time using the transformation of time specified in the transform option.
 ```{r}
 cox.zph(coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age, data = AIDS))
 ```
-According to the result of the cox.zph test, none of the variables has a p value less than 0.05, hence we fail to reject the null hypothesis. We conclude that these variables are *not* time dependent variables, as demonstrated below. 
+    According to the result of the cox.zph test, none of the variables has a p value less than 0.05, hence we fail to reject the null hypothesis. We conclude that these variables are *not* time dependent variables, as demonstrated below. 
 ```{r}
 ggsurvplot(survfit(Surv(time,censor == 1) ~ cd4grp, data = AIDS), fun = "cloglog")
 ggsurvplot(survfit(Surv(time,censor == 1) ~ karnof, data = AIDS), fun = "cloglog")
