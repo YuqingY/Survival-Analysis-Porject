@@ -30,8 +30,29 @@ km.AIDS <- survfit(SurvObj ~ 1, data = AIDS, conf.type = "log-log")
 autoplot(km.AIDS)
 ```
 
-Something New No.2: Deriving/detailing AIC&BIC for model seleciton on Cox PH (Helen)
-###AIC Method
+##Something New
+
+###1. Deriving/detailing AIC&BIC for model seleciton on Cox PH (Helen)
+
+###2.1 Introduction (An overview of Christensen, 2018)
+  Akaike (1974) introduced the first information criterion, the Akaike Information
+Criterion (AIC). AIC was based on Kullback-Leibler (K-L) distance (Kullback & Leibler, 1951), which connected information is a way of conceptualizing the distance, or discrepancy, between two models: f(x), the “true” or “generating” model from which actual observations emerge, and g(x), a model given by the researcher to predict the population. K-L distance can be understood as the information lost
+when g(x) is used to approximate f(x). If g(x) is exactly the same as f(x), then the K-L distance between the two models is zero.In practice, the “true” model is unknown, so the absolute K-L distance between f(x) and g(x) is impossible to compute. Yet relative distances can be computed when we are evaluating two or more prediction models. Akaike’s (1974) key insight was that maximum likelihood estimation, with some correction based on the number of parameters in the model, is the expected K-L distance.
+
+###1.1.1 Definition and derivation of AIC & BIC
+    AIC: Akaike’s Information Criteria =  −2ln likelihood + 2p
+    BIC: Bayesian Information Criteria =  −2ln likelihood + pln(n)
+    where p is the number of estimated parameters (the number of explanatory variables plus 1) and n is the sample size. Likelihood is evaluated at Maximum Likelihood Estimator. AIC and BIC measure the model's generalizability.Both techniques suggest choosing a model with the smallest AIC or BIC value. Information criteria in general measures the information lost when we use a statistical model to approximate the true model. Thus, the less information is lost during this process, the better the approximating model is. 
+    
+###1.1.2 Resources
+    I came to know this concept from our lecture's brief introduction to AIC and BIC when we talked about model building.
+    I learned more about information criteria in model selection through Christensen(UCLA)'s publication
+    https://www.sas.com/content/dam/SAS/support/en/sas-global-forum-proceedings/2018/2587-2018.pdf
+    R codes and BeSS Package: https://cran.r-project.org/web/packages/BeSS/BeSS.pdf
+###1.1.3 Challenges
+    It is challenging to understand the application of AIC/BIC in Cox PH model selection and get the R codes to work.
+###1.2 Deriving AIC & BIC on Cox PH in R
+###1.3 Model selection using AIC
 ```{r, warning=FALSE}
 #Forward Selection using AIC 
 aids.aic <- coxph(Surv(time,censor == 1) ~ 1,data = AIDS)
@@ -53,7 +74,7 @@ aids.aic1 <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age,dat
 aids.aic1 %>% tidy()
 aids.aic1 %>% glance()
 ```
-###BIC Method
+###1.4 Model selection using BIC
 ```{r, warning=FALSE}
 #Forward Selection using BIC
 dim(AIDS)
@@ -75,7 +96,10 @@ aids.bic1 <- coxph(Surv(time,censor == 1) ~ tx + karnof + cd4,data = AIDS)
 aids.bic1 %>% tidy()
 aids.bic1 %>% glance()
 ```
-##Something New
+
+###1.5 Interpretation and conclusion
+Given the results of AIC and BIC model selection methods, we decide to further work on the final model suggested by AIC selection, which includes the variables "tx", "ivdrug", "karnof", "cd4", and "age". This is because BIC suggested a model with only three variables but we want to keep a reasonable number of variables in our preliminary model to have enough interaction to build a more refined model. 
+
 ###1. Investigation of PH assumption (Rachel)
 ####1.1 Introduction 
 #####1.1.1 What is PH Assumption, and why it is important?
@@ -103,26 +127,4 @@ ggsurvplot(survfit(Surv(time,censor == 1) ~ ivdrug, data = AIDS), fun = "cloglog
 1.3 Interpretation
 1.4 Actions
 
-2. Deriving/detailing AIC&BIC for model seleciton on Cox PH (Helen)
 
-2.1 Introduction (An overview of Christensen, 2018)
-  Akaike (1974) introduced the first information criterion, the Akaike Information
-Criterion (AIC). AIC was based on Kullback-Leibler (K-L) distance (Kullback & Leibler, 1951), which connected information is a way of conceptualizing the distance, or discrepancy, between two models: f(x), the “true” or “generating” model from which actual observations emerge, and g(x), a model given by the researcher to predict the population. K-L distance can be understood as the information lost
-when g(x) is used to approximate f(x). If g(x) is exactly the same as f(x), then the K-L distance between the two models is zero.In practice, the “true” model is unknown, so the absolute K-L distance between f(x) and g(x) is impossible to compute. Yet relative distances can be computed when we are evaluating two or more prediction models. Akaike’s (1974) key insight was that maximum likelihood estimation, with some correction based on the number of parameters in the model, is the expected K-L distance.
-
-2.1.1 Definition and derivation of AIC & BIC
-    AIC: Akaike’s Information Criteria =  −2ln likelihood + 2p
-    BIC: Bayesian Information Criteria =  −2ln likelihood + pln(n)
-    where p is the number of estimated parameters (the number of explanatory variables plus 1) and n is the sample size. Likelihood is evaluated at Maximum Likelihood Estimator. AIC and BIC measure the model's generalizability.Both techniques suggest choosing a model with the smallest AIC or BIC value. Information criteria in general measures the information lost when we use a statistical model to approximate the true model. Thus, the less information is lost during this process, the better the approximating model is. 
-    
-2.1.2 Resources
-    I came to know this concept from our lecture's brief introduction to AIC and BIC when we talked about model building.
-    I learned more about information criteria in model selection through Christensen(UCLA)'s publication
-    https://www.sas.com/content/dam/SAS/support/en/sas-global-forum-proceedings/2018/2587-2018.pdf
-    R codes and BeSS Package: https://cran.r-project.org/web/packages/BeSS/BeSS.pdf
-2.1.3 Challenges
-    It is challenging to understand the application of AIC/BIC in Cox PH model selection and get the R codes to work.
-2.2 Deriving AIC & BIC on Cox PH in R
-2.3 Forward selection using AIC & BIC
-2.4 Backward selection using AIC & BIC
-2.5 Interpretation and conclusion
