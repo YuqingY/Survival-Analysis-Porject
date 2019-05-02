@@ -138,9 +138,24 @@ ggsurvplot(survfit(Surv(time,censor == 1) ~ ivdrug, data = AIDS), fun = "cloglog
 ###Model Selection with Interaction
 
 ```{r}
-coxph(Surv(time,censor == 1) ~ tx * ivdrug * karnof * cd4 * age,data = AIDS)
+coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age + ivdrug*cd4 + ivdrug*karnof + karnof*cd4 + karnof*age + cd4*age,  data = AIDS)
+``` 
+
+```{r}
+aids11 <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age + ivdrug*cd4 + ivdrug*karnof + karnof*cd4 + karnof*age + cd4*age,  data = AIDS)
+drop1(aids11,data=AIDS,test="Chisq")
 ```
 
->>>>>>> 6cb96314d24d0dc49c8241c3f2ac1ed3533a4e80
+```{r}
+#-'ivdrg*cd4'
+aids11 <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age + ivdrug*karnof + karnof*cd4 + karnof*age + cd4*age, data = AIDS)
+drop1(aids11,data=AIDS,test="Chisq")
+```
+```{r}
+#-'ivdrug*karnof'
+aids11 <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age + karnof*cd4 + karnof*age + cd4*age,  data = AIDS)
+drop1(aids11,data=AIDS,test="Chisq")  
+
+```
 
 
