@@ -121,6 +121,7 @@ drop1(aids11,data=AIDS,test="Chisq")
 aids11 <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age + ivdrug*karnof + karnof*cd4 + karnof*age + cd4*age, data = AIDS)
 drop1(aids11,data=AIDS,test="Chisq")
 ```
+
 ```{r}
 #-'ivdrug*karnof'
 aids11 <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age + karnof*cd4 + karnof*age + cd4*age,  data = AIDS)
@@ -167,12 +168,6 @@ ggsurvplot(survfit(Surv(time,censor == 1) ~ ivdrug, data = AIDS), fun = "cloglog
 
 ####2.3 Interpretation
     Base on the cox.zph test as well as the graph, we conclude that we can assume proportional harzard and proceed to our model.
-
-###Model Selection with Interaction
-
-```{r}
-coxph(Surv(time,censor == 1) ~ tx * ivdrug * karnof * cd4 * age,data = AIDS)
-```
 
 
 
