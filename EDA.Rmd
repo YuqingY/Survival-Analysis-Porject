@@ -21,6 +21,7 @@ library(survminer)
 AIDS <- read_csv("https://raw.githubusercontent.com/YuqingY/Survival-Analysis-Project/master/AIDSdata.csv")
 AIDS$cd4grp <- floor(AIDS$cd4/50)
 AIDS$agegrp <- floor(AIDS$age/10)
+AIDS$ivgrp <- floor(AIDS$ivdrug/2)
 ```
 ```{r}
 summary(AIDS$age)
@@ -167,12 +168,13 @@ ggsurvplot(survfit(Surv(time,censor == 1) ~ ivdrug, data = AIDS), fun = "cloglog
 
 ####2.3 Interpretation
     Base on the cox.zph test as well as the graph, we conclude that we can assume proportional harzard and proceed to our model.
-
-###Model Selection with Interaction
-
+    
+##Exploration
 ```{r}
-coxph(Surv(time,censor == 1) ~ tx * ivdrug * karnof * cd4 * age,data = AIDS)
+#Backward Selection
+aids.aic <- coxph(Surv(time,censor == 1) ~ tx + txgrp + strat2 + sex + raceth + ivdrug + hemophil + karnof + cd4 + age + priorzdv + ivgrp,data = AIDS)
+step(aids.aic, ~tx + txgrp + strat2 + sex + raceth + ivdrug + hemophil + karnof + cd4 + age + priorzdv + ivgrp, data = AIDS, direction = "backward", k=2)
+#Cox PH
+coxph(formula = Surv(time, censor == 1) ~ tx + karnof + cd4 + age + ivgrp, data = AIDS)
 ```
-
-
 
