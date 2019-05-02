@@ -122,8 +122,9 @@ ggsurvplot(survfit(Surv(time,censor == 1) ~ tx, data = AIDS), fun = "cloglog")
 ggsurvplot(survfit(Surv(time,censor == 1) ~ agegrp, data = AIDS), fun = "cloglog")
 ggsurvplot(survfit(Surv(time,censor == 1) ~ ivdrug, data = AIDS), fun = "cloglog")
 ```
+
 ####2.3 Interpretation
-    Base on the 
+    Base on the cox.zph test as well as the graph, we conclude that we can assume proportional harzard and proceed to our model.
     
 
 
