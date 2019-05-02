@@ -16,7 +16,7 @@ library(reshape2)
 library(ggplot2)
 library(survminer)
 ```
-
+##EDA
 ```{r, include=FALSE}
 AIDS <- read_csv("https://raw.githubusercontent.com/YuqingY/Survival-Analysis-Project/master/AIDSdata.csv")
 AIDS$cd4grp <- floor(AIDS$cd4/50)
@@ -29,6 +29,9 @@ AIDS$SurvObj <- with( AIDS, Surv(time_d, censor == 0))
 km.AIDS <- survfit(SurvObj ~ 1, data = AIDS, conf.type = "log-log")
 autoplot(km.AIDS)
 ```
+##Introduction
+To treat patients infected by human immunodeficiency virus type 1(HIV 1), it is important to know when they are likely to develop the auired immunodeficiency syndrome or to die, and what are some ways to possibily slow down the development process. The data used in this project come from a double-blind, placebo-controlled trial that compared the three-drug regimen of indinavir (IDV), open label zidovudine (ZDV) or stavudine (d4T) and lamivudine (3TC) with the two-drug regimen of zidovudine or stavudine and lamivudine in HIV-infected patients (Hammer et al., 1997). Using the data, we want to know what variables contribute to a longer time to event (development of AIDS or death) and use those variables to create a model that predicting the time to the development of the AIDS or death for HIV-1 patients.
+
 
 ##Something New
 
