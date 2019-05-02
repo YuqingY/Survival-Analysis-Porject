@@ -34,10 +34,10 @@ autoplot(km.AIDS)
   To answer this question, we use the data from a double-blind, placebo-controlled trial that compared the three-drug regimen of indinavir (IDV), open-label zidovudine (ZDV) or stavudine (d4T) and lamivudine (3TC) with the two-drug regimen of zidovudine or stavudine and lamivudine in HIV-infected patients (Hammer et al., 1997). Besides having the treatment method, this dataset also has a lot of other information about the patients, including their age, sex, race, IV drug use history, hemophiliac, Karnofsky performance scale, as well as baseline CD4 count. Using the data, we want to know what variables contribute to a longer time to event (development of AIDS or death) and use those variables to create a model that predicts the time to the development of the AIDS or death for HIV-1 patients.
   We choose to use a Cox proportional hazard model to predict the time to event. We use the AIC method for model selection and assume proportional hazard, which is also tested in the report.
 
-## Methods
-
-
-##Model Building and Results
+##Methods
+  We use a dataset that has 851 patients information, and use AIC model building technique to select the variables that best predict the time to event (development of AIDS or death) from a groups of 11 variables, including age, sex, race, IV drug history, hemophiliac, Karnofsky performance score, baseline CD4 level, as well as months of prior ZDV use. We also looked at possible interaction of variables but decided against interaction base on large p-values. Using the variables selected, we test the Proportional Hazard assumption and build a Cox Proportional Hazard Model that we believe best predict the time to event. The primary endpoint was the time to the development of the acquired immunodeficiency syndrome (AIDS) or death.
+  
+##Result
 
 ###1. Deriving/detailing AIC&BIC for model seleciton on Cox PH (Helen)
 
