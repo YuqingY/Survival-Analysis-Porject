@@ -35,7 +35,7 @@ autoplot(km.AIDS)
   We choose to use a Cox proportional hazard model to predict the time to event. We use the AIC method for model selection and assume proportional hazard, which is also tested in the report.
 
 ## Methods
-
+  
 
 ##Model Building and Results
 
@@ -105,10 +105,10 @@ aids.bic1 %>% tidy()
 aids.bic1 %>% glance()
 ```
 
-###1.4 Interpretation and conclusion
+###1.4 Interpretation 
 Given the results of AIC and BIC model selection methods, we decide to further work on the final model suggested by AIC selection, which includes the variables "tx", "ivdrug", "karnof", "cd4", and "age". This is because BIC suggested a model with only three variables but we want to keep a reasonable number of variables in our preliminary model to have enough interaction to build a more refined model. 
 
-###Model Selection with Interaction
+###1.5 Model Selection with Interaction
 Using the results from AIC model selection, we want to further build our model including terms of interaction through backwar selection. We decided the interaction terms based on their correlation and medical relevance. 
 
 ```{r}
@@ -134,6 +134,7 @@ aids.interaction <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + 
 aids.interaction %>% tidy()
 aids.interaction %>% glance()
 ```
+###1.6 Conclusion
 Since our interaction model gives large p-values on all interaction terms, and even larger p-values of our original variables than our AIC model, we decide to not include interaction in our model and procede with the AIC model, which is our final model built:
 
 ```{r}
