@@ -169,6 +169,16 @@ ggsurvplot(survfit(Surv(time,censor == 1) ~ ivdrug, data = AIDS), fun = "cloglog
 
 ####2.3 Interpretation
     Base on the cox.zph test as well as the graph, we conclude that we can assume proportional harzard and proceed to our model.
-
+    
+### 3.The Model
+```{r}
+aids.aic1 <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age,data = AIDS)
+aids.aic1 %>% tidy()
+aids.aic1 %>% glance()
+```
+####3.1 Interpretation of the coefficients
+  $\beta_1=-0.72240923$ says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.72240923$=0.486 compared to the control group.
+  $\beta_2=-0.26328558$ says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.26328558$=0.769 compared to the control group.
+  $\beta_3=-0.05905275$ says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.05905275$=0.0.943 compared to the control group.
 
 
