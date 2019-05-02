@@ -50,7 +50,7 @@ when g(x) is used to approximate f(x). If g(x) is exactly the same as f(x), then
     AIC: Akaike’s Information Criteria =  −2ln likelihood + 2p
     BIC: Bayesian Information Criteria =  −2ln likelihood + pln(n)
     where p is the number of estimated parameters (the number of explanatory variables plus 1) and n is the sample size. Likelihood is evaluated at Maximum Likelihood Estimator. AIC and BIC measure the model's generalizability.Both techniques suggest choosing a model with the smallest AIC or BIC value. Information criteria in general measures the information lost when we use a statistical model to approximate the true model. Thus, the less information is lost during this process, the better the approximating model is. 
-    The derivation of AIC and BIC is based on 
+    The derivation of AIC and BIC is based on maximum likelihood estimation. With some correction based on the number of parameters in the model to MLE will be the expected K-L distance. We want the likelihood to be maximized because that says that the model describes our data well. We therefore subtract 2 times the ln likelihood to the expected K-L distance because higher likelihood means that our model fits the data better, and thus the information lost is less. To avoid overfitting the model, Akaike added 2 times the number of estimated parameters back to the K-L distance to account for the number of parameters in the model. The addition of 2p will increase the K-L distance, and thus works as a punishment of extra parameters estimated to avoid overfitting. BIC suggests that the adjustment made is p*ln(n) to both account for the effect of number of parameters estimated and the sample size. 
     
     
 ###1.1.2 Resources
