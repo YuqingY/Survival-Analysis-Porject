@@ -43,6 +43,8 @@ when g(x) is used to approximate f(x). If g(x) is exactly the same as f(x), then
     AIC: Akaike’s Information Criteria =  −2ln likelihood + 2p
     BIC: Bayesian Information Criteria =  −2ln likelihood + pln(n)
     where p is the number of estimated parameters (the number of explanatory variables plus 1) and n is the sample size. Likelihood is evaluated at Maximum Likelihood Estimator. AIC and BIC measure the model's generalizability.Both techniques suggest choosing a model with the smallest AIC or BIC value. Information criteria in general measures the information lost when we use a statistical model to approximate the true model. Thus, the less information is lost during this process, the better the approximating model is. 
+    The derivation of AIC and BIC is based on 
+    
     
 ###1.1.2 Resources
     I came to know this concept from our lecture's brief introduction to AIC and BIC when we talked about model building.
@@ -51,8 +53,7 @@ when g(x) is used to approximate f(x). If g(x) is exactly the same as f(x), then
     R codes and BeSS Package: https://cran.r-project.org/web/packages/BeSS/BeSS.pdf
 ###1.1.3 Challenges
     It is challenging to understand the application of AIC/BIC in Cox PH model selection and get the R codes to work.
-###1.2 Deriving AIC & BIC on Cox PH in R
-###1.3 Model selection using AIC
+###1.2 Model selection using AIC
 ```{r, warning=FALSE}
 #Forward Selection using AIC 
 aids.aic <- coxph(Surv(time,censor == 1) ~ 1,data = AIDS)
@@ -74,7 +75,7 @@ aids.aic1 <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age,dat
 aids.aic1 %>% tidy()
 aids.aic1 %>% glance()
 ```
-###1.4 Model selection using BIC
+###1.3 Model selection using BIC
 ```{r, warning=FALSE}
 #Forward Selection using BIC
 dim(AIDS)
@@ -97,7 +98,7 @@ aids.bic1 %>% tidy()
 aids.bic1 %>% glance()
 ```
 
-###1.5 Interpretation and conclusion
+###1.4 Interpretation and conclusion
 Given the results of AIC and BIC model selection methods, we decide to further work on the final model suggested by AIC selection, which includes the variables "tx", "ivdrug", "karnof", "cd4", and "age". This is because BIC suggested a model with only three variables but we want to keep a reasonable number of variables in our preliminary model to have enough interaction to build a more refined model. 
 
 ###1. Investigation of PH assumption (Rachel)
