@@ -174,8 +174,8 @@ ggsurvplot(survfit(Surv(time,censor == 1) ~ ivdrug, data = AIDS), fun = "cloglog
 ##Exploration
 ```{r}
 #Backward Selection
-aids.aic <- coxph(Surv(time,censor == 1) ~ tx + txgrp + strat2 + sex + raceth + ivdrug + hemophil + karnof + cd4 + age + priorzdv + ivgrp,data = AIDS)
-step(aids.aic, ~tx + txgrp + strat2 + sex + raceth + ivdrug + hemophil + karnof + cd4 + age + priorzdv + ivgrp, data = AIDS, direction = "backward", k=2)
+aids.aic <- coxph(Surv(time,censor == 1) ~ tx + txgrp + strat2 + sex + as.factor(raceth) + ivdrug + hemophil + karnof + cd4 + age + priorzdv + ivgrp,data = AIDS)
+step(aids.aic, ~tx + txgrp + strat2 + sex + as.factor(raceth) + ivdrug + hemophil + karnof + cd4 + age + priorzdv + ivgrp, data = AIDS, direction = "backward", k=2)
 #Cox PH
 coxph(formula = Surv(time, censor == 1) ~ tx + karnof + cd4 + age + ivgrp, data = AIDS)
 ```
