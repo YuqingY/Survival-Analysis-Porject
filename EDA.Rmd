@@ -18,7 +18,7 @@ library(survminer)
 ```
 
 ```{r, include=FALSE}
-AIDS <- read_csv("~/Desktop/Survival-Analysis-Project/AIDSdata.csv")
+AIDS <- read_csv("https://raw.githubusercontent.com/YuqingY/Survival-Analysis-Project/master/AIDSdata.csv")
 AIDS$cd4grp <- floor(AIDS$cd4/50)
 AIDS$agegrp <- floor(AIDS$age/10)
 ```
@@ -123,6 +123,12 @@ ggsurvplot(survfit(Surv(time,censor == 1) ~ tx, data = AIDS), fun = "cloglog")
 ggsurvplot(survfit(Surv(time,censor == 1) ~ agegrp, data = AIDS), fun = "cloglog")
 ggsurvplot(survfit(Surv(time,censor == 1) ~ ivdrug, data = AIDS), fun = "cloglog")
 ```
+<<<<<<< HEAD
+
+####2.3 Interpretation
+    Base on the cox.zph test as well as the graph, we conclude that we can assume proportional harzard and proceed to our model.
+    
+=======
 1.3 Interpretation
 1.4 Actions
 
@@ -132,5 +138,6 @@ ggsurvplot(survfit(Surv(time,censor == 1) ~ ivdrug, data = AIDS), fun = "cloglog
 coxph(Surv(time,censor == 1) ~ tx * ivdrug * karnof * cd4 * age,data = AIDS)
 ```
 
+>>>>>>> 6cb96314d24d0dc49c8241c3f2ac1ed3533a4e80
 
 
