@@ -18,7 +18,7 @@ library(survminer)
 ```
 
 ```{r, include=FALSE}
-AIDS <- read_csv("~/Desktop/Survival-Analysis-Project/AIDSdata.csv")
+AIDS <- read_csv("https://raw.githubusercontent.com/YuqingY/Survival-Analysis-Project/master/AIDSdata.csv")
 AIDS$cd4grp <- floor(AIDS$cd4/50)
 AIDS$agegrp <- floor(AIDS$age/10)
 ```
