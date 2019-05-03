@@ -107,10 +107,10 @@ aids.bic1 %>% glance()
 ```
 
 ####1.4 Interpretation 
-Given the results of AIC and BIC model selection methods, we decide to further work on the final model suggested by AIC selection, which includes the variables "tx", "ivdrug", "karnof", "cd4", and "age". This is because BIC suggested a model with only three variables but we want to keep a reasonable number of variables in our preliminary model to have enough interaction to build a more refined model. 
+  Given the results of AIC and BIC model selection methods, we decide to further work on the final model suggested by AIC selection, which includes the variables "tx", "ivdrug", "karnof", "cd4", and "age". This is because BIC suggested a model with only three variables but we want to keep a reasonable number of variables in our preliminary model to have enough interaction to build a more refined model. 
 
 ####1.5 Model Selection with Interaction
-Using the results from AIC model selection, we want to further build our model including terms of interaction through backwar selection. We decided the interaction terms based on their correlation and medical relevance. 
+  Using the results from AIC model selection, we want to further build our model including terms of interaction through backwar selection. We decided the interaction terms based on their correlation and medical relevance. 
 
 ```{r}
 aids11 <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age + ivgrp*cd4 + ivgrp*karnof + karnof*cd4 + karnof*age + cd4*age,  data = AIDS)
@@ -129,14 +129,14 @@ aids11 <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age + karno
 drop1(aids11,data=AIDS,test="Chisq")  
 
 ```
-At this step, we see that ivgrp has the largest p-value and all interaction terms have smaller p-values than ivdrug. Since we want to keep our original variable ivgrp in the model, we do not want to subtract it from the model. We'll stop here for our interaction model:
+  At this step, we see that ivgrp has the largest p-value and all interaction terms have smaller p-values than ivdrug. Since we want to keep our original variable ivgrp in the model, we do not want to subtract it from the model. We'll stop here for our interaction model:
 ```{r}
 aids.interaction <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age + karnof*cd4 + karnof*age + cd4*age,data = AIDS)
 aids.interaction %>% tidy()
 aids.interaction %>% glance()
 ```
 ####1.6 Conclusion
-Since our interaction model gives large p-values on all interaction terms, and even larger p-values of our original variables than our AIC model, we decide to not include interaction in our model and procede with the AIC model, which is our final model built:
+  Since our interaction model gives large p-values on all interaction terms, and even larger p-values of our original variables than our AIC model, we decide to not include interaction in our model and procede with the AIC model, which is our final model built:
 
 ```{r}
 #Final model selected in the model building process:
@@ -171,7 +171,7 @@ ggsurvplot(survfit(Surv(time,censor == 1) ~ agegrp, data = AIDS), fun = "cloglog
 ggsurvplot(survfit(Surv(time,censor == 1) ~ ivgrp, data = AIDS), fun = "cloglog")
 ```
 ####2.3 Interpretation on PH Assumption
-     Base on the cox.zph test as well as the graph, we conclude that we can assume proportional hazard and proceed to our model. According to the result of the cox.zph test, none of the variables has a p-value less than 0.05, hence we fail to reject the null hypothesis. In addition to the cox.zph test, the graph shows that the lines are mostly parallel, We conclude that these variables are *not* time-dependent variables, as demonstrated below.   
+    Base on the cox.zph test as well as the graph, we conclude that we can assume proportional hazard and proceed to our model. According to the result of the cox.zph test, none of the variables has a p-value less than 0.05, hence we fail to reject the null hypothesis. In addition to the cox.zph test, the graph shows that the lines are mostly parallel, We conclude that these variables are *not* time-dependent variables, as demonstrated below.   
     
 ##Result   
 ###The Model
