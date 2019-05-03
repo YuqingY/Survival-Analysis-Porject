@@ -2,7 +2,9 @@
 title: "Survival Analysis Project"
 author: "Helen Lan & Rachel Yang"
 date: "4/7/2019"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r global_options, include=TRUE, message=FALSE, warning=FALSE, echo = FALSE}
@@ -103,26 +105,10 @@ aids.bic1 %>% glance()
 ####1.4 Interpretation 
     Given the results of AIC and BIC model selection methods, we decide to further work on the final model suggested by AIC selection, which includes the variables "tx", "ivdrug", "karnof", "cd4", and "age". This is because BIC suggested a model with only three variables but we want to keep a reasonable number of variables in our preliminary model to have enough interaction to build a more refined model. 
 
-####1.5 Model Selection with Interaction
-  Using the results from AIC model selection, we want to further build our model including terms of interaction through backwar selection. We decided the interaction terms based on their correlation and medical relevance. 
+####1.5 Model Selection with Interaction  
+    Using the results from AIC model selection, we want to further build our model including terms of interaction through backward selection. Based on their correlation and medical relevance, we decided the interaction terms to be ivgrp:cd4,  ivgrp:karnof, karnof:cd4, karnof:age, and cd4:age. In this backward selection, we drop the interaction terms with the highest p-value until no interaction terms have a larger p-value than the non-interaction (original) variables.
+    We dropped ivgrp:cd4 and ivgrp:karnof in the first and second step, respectively. In the third step, we see that ivgrp has the largest p-value and all interaction terms have smaller p-values than ivdrug. Since we want to keep our original variable ivgrp in the model, we do not want to subtract it from the model. We'll stop here for our interaction model:
 
-```{r, warning=FALSE, result = FALSE}
-aids11 <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age + ivgrp*cd4 + ivgrp*karnof + karnof*cd4 + karnof*age + cd4*age,  data = AIDS)
-drop1(aids11,data=AIDS,test="Chisq")
-```
-
-```{r, warning=FALSE, result = FALSE}
-#-'ivgrp*cd4'
-aids11 <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age + ivgrp*karnof + karnof*cd4 + karnof*age + cd4*age, data = AIDS)
-drop1(aids11,data=AIDS,test="Chisq")
-```
-
-```{r}
-#-'ivgrp*karnof'
-aids11 <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age + karnof*cd4 + karnof*age + cd4*age,  data = AIDS)
-drop1(aids11,data=AIDS,test="Chisq")  
-```
-    At this step, we see that ivgrp has the largest p-value and all interaction terms have smaller p-values than ivdrug. Since we want to keep our original variable ivgrp in the model, we do not want to subtract it from the model. We'll stop here for our interaction model:
 ```{r}
 aids.interaction <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age + karnof*cd4 + karnof*age + cd4*age,data = AIDS)
 aids.interaction %>% glance()
@@ -172,17 +158,17 @@ ggsurvplot(survfit(Surv(time,censor == 1) ~ ivgrp, data = AIDS), fun = "cloglog"
 ###The Model
     Based on the AIC and BIC celection methods, we decided on the model below:
 ```{r}
-aids.aic1 <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age,data = AIDS)
+aids.aic1 <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age, data = AIDS)
 aids.aic1 %>% tidy()
 aids.aic1 %>% glance()
 ```
 
 ####Interpretation of the coefficients and model results  
-    $\beta_1=-0.72321240$ says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.72321240$=0.485 compared to the control group.   
-    $\beta_2=-0.53324708$ says that the hazard of development of AIDS or dying for people who had IV drug consumption before is smaller by a factor of $1/e^.53324708$=0.587 compared to those who never had IV drug consumption before.  
-    $\beta_3=-0.05911936$ says that the hazard of development of AIDS or dying decreases by a factor of $1/e^.05911936$=0.943 for a one unit increase in Karnofsky Performance Scale.  
-    $\beta_4=-0.01514841$ says that the hazard of development of AIDS or dying decreases by a factor of $1/e^.01514841$=0.985 for a one unit increase in baseline CD4 count.  
-    $\beta_5=0.02179354	$ says that the hazard of development of AIDS or dying increases by a factor of $e^.02179354	$=1.022 for a one unit increase in age.  
+    $\beta_1$ = -0.72321240 says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.72321240$ = 0.485 compared to the control group.   
+    $\beta_2$ = -0.53324708 says that the hazard of development of AIDS or dying for people who had IV drug consumption before is smaller by a factor of $1/e^.53324708$ = 0.587 compared to those who never had IV drug consumption before.  
+    $\beta_3$ = -0.05911936 says that the hazard of development of AIDS or dying decreases by a factor of $1/e^.05911936$=0.943 for a one unit increase in Karnofsky Performance Scale.  
+    $\beta_4$ = -0.01514841 says that the hazard of development of AIDS or dying decreases by a factor of $1/e^.01514841$=0.985 for a one unit increase in baseline CD4 count.  
+    $\beta_5$ = 0.02179354 says that the hazard of development of AIDS or dying increases by a factor of $e^.02179354$ = 1.022 for a one unit increase in age.  
     
 ###KM Curve by Treatments
 ```{r, echo = FALSE}
@@ -190,6 +176,9 @@ AIDS$SurvObj <- with( AIDS, Surv(time_d, censor == 0))
 km.AIDS <- survfit(SurvObj ~ tx, data = AIDS, conf.type = "log-log")
 autoplot(km.AIDS)
 ```
+     
+    We can see from the KM curve that patients in the three-drug treatment group has a higher probability of survival approximately before time 320.
+
 ###Conclusion
     
     The result of survival analysis suggests that IDV treatment decreases the hazard of development of AIDS or dying by a factor of more than half (0.485) compared to treatments without IDV, holding all other conditons equal. Since the p-values of all the coefficients are very small, we also found in our project that besides treatment, the patient's Karnofsky Performance Scale, IV drug use history, age, as well as his basline CD4 level are all statistically significant in predicting the time to event (the development of AIDS or death). We can also conclude that among all the variables in the model, treatment that includes IDV decreases the hazard of development of AIDS or dying the most. Therefore, IDV is an effective treatment on decreasing hazard of development of AIDS or dying.
