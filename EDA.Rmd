@@ -1,5 +1,5 @@
 ---
-title: "EDA"
+title: "Survival Analysis Project"
 author: "Helen Lan & Rachel Yang"
 date: "4/7/2019"
 output: html_document
@@ -65,21 +65,21 @@ when g(x) is used to approximate f(x). If g(x) is exactly the same as f(x), then
 ```{r, warning=FALSE}
 #Forward Selection using AIC 
 aids.aic <- coxph(Surv(time,censor == 1) ~ 1,data = AIDS)
-step(aids.aic, ~tx + txgrp + strat2 + sex + raceth + ivdrug + hemophil + karnof + cd4 + age + priorzdv, data = AIDS, direction = "forward", k=2)
+step(aids.aic, ~tx + txgrp + strat2 + sex + as.factor(raceth) + ivdrug + hemophil + karnof + cd4 + age + priorzdv + ivgrp, data = AIDS, direction = "forward", k=2)
 ```
 
 At this step, forward selection using AIC suggests that the model without any additional variable will have the smallest AIC. So our result from forward selection using AIC indicates that we should include tx + ivdrug + karnof + cd4 + age in our model. 
 
 ```{r, warning=FALSE}
-#Backward Selection using AIC 
-aids.aic <- coxph(Surv(time,censor == 1) ~ tx + txgrp + strat2 + sex + raceth + ivdrug + hemophil + karnof + cd4 + age + priorzdv,data = AIDS)
-step(aids.aic, ~tx + txgrp + strat2 + sex + raceth + ivdrug + hemophil + karnof + cd4 + age + priorzdv, data = AIDS, direction = "backward", k=2)
+#Backward Selection
+aids.aic <- coxph(Surv(time,censor == 1) ~ tx + txgrp + strat2 + sex + as.factor(raceth) + ivdrug + hemophil + karnof + cd4 + age + priorzdv + ivgrp,data = AIDS)
+step(aids.aic, ~tx + txgrp + strat2 + sex + as.factor(raceth) + ivdrug + hemophil + karnof + cd4 + age + priorzdv + ivgrp, data = AIDS, direction = "backward", k=2)
 ```
-The result from backward selection using AIC indicates that we should include tx + ivdrug + karnof + cd4 + age in our model. 
+The result from backward selection using AIC indicates that we should include tx + karnof + cd4 + age + ivgrp in our model. 
 
 ```{r}
 #Final model suggested by AIC:
-aids.aic1 <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age,data = AIDS)
+aids.aic1 <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age,data = AIDS)
 aids.aic1 %>% tidy()
 aids.aic1 %>% glance()
 ```
@@ -88,14 +88,15 @@ aids.aic1 %>% glance()
 #Forward Selection using BIC
 dim(AIDS)
 aids.bic <- coxph(Surv(time,censor == 1) ~ 1,data = AIDS)
-step(aids.bic, ~tx + txgrp + strat2 + sex + raceth + ivdrug + hemophil + karnof + cd4 + age + priorzdv, data = AIDS, direction = "forward", k=log(135))
+step(aids.bic, ~tx + txgrp + strat2 + sex + as.factor(raceth) + ivdrug + hemophil + karnof + cd4 + age + priorzdv + ivgrp, data = AIDS, direction = "forward", k=log(135))
 ```
 The result from forward selection using BIC indicates that we should include tx  + karnof + cd4 in our model.
 
 ```{r, warning=FALSE}
 #Backward Selection using BIC
-aids.bic <- coxph(Surv(time,censor == 1) ~ tx + txgrp + strat2 + sex + raceth + ivdrug + hemophil + karnof + cd4 + age + priorzdv,data = AIDS)
-step(aids.bic, ~tx + txgrp + strat2 + sex + raceth + ivdrug + hemophil + karnof + cd4 + age + priorzdv, data = AIDS, direction = "backward", k=log(135))
+aids.bic <- coxph(Surv(time,censor == 1) ~tx + txgrp + strat2 + sex + as.factor(raceth) + ivdrug + hemophil + karnof + cd4 + age + priorzdv + ivgrp,data = AIDS)
+step(aids.bic, ~tx + txgrp + strat2 + sex + as.factor(raceth) + ivdrug + hemophil + karnof + cd4 + age + priorzdv + ivgrp, data = AIDS, direction = "backward", k=log(135))
+
 ```
 The result from backward selection using BIC indicates that we should include tx  + karnof + cd4 in our model.
 
@@ -113,25 +114,25 @@ Given the results of AIC and BIC model selection methods, we decide to further w
 Using the results from AIC model selection, we want to further build our model including terms of interaction through backwar selection. We decided the interaction terms based on their correlation and medical relevance. 
 
 ```{r}
-aids11 <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age + ivdrug*cd4 + ivdrug*karnof + karnof*cd4 + karnof*age + cd4*age,  data = AIDS)
+aids11 <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age + ivgrp*cd4 + ivgrp*karnof + karnof*cd4 + karnof*age + cd4*age,  data = AIDS)
 drop1(aids11,data=AIDS,test="Chisq")
 ```
 
 ```{r}
-#-'ivdrg*cd4'
-aids11 <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age + ivdrug*karnof + karnof*cd4 + karnof*age + cd4*age, data = AIDS)
+#-'ivgrp*cd4'
+aids11 <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age + ivgrp*karnof + karnof*cd4 + karnof*age + cd4*age, data = AIDS)
 drop1(aids11,data=AIDS,test="Chisq")
 ```
 
 ```{r}
-#-'ivdrug*karnof'
-aids11 <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age + karnof*cd4 + karnof*age + cd4*age,  data = AIDS)
+#-'ivgrp*karnof'
+aids11 <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age + karnof*cd4 + karnof*age + cd4*age,  data = AIDS)
 drop1(aids11,data=AIDS,test="Chisq")  
 
 ```
-At this step, we see that ivdrug has the largest p-value and all interaction terms have smaller p-values than ivdrug. Since we want to keep our original variable ivdrug in the model, we do not want to subtract it from the model. We'll stop here for our interaction model:
+At this step, we see that ivgrp has the largest p-value and all interaction terms have smaller p-values than ivdrug. Since we want to keep our original variable ivgrp in the model, we do not want to subtract it from the model. We'll stop here for our interaction model:
 ```{r}
-aids.interaction <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age + karnof*cd4 + karnof*age + cd4*age,data = AIDS)
+aids.interaction <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age + karnof*cd4 + karnof*age + cd4*age,data = AIDS)
 aids.interaction %>% tidy()
 aids.interaction %>% glance()
 ```
@@ -140,7 +141,7 @@ Since our interaction model gives large p-values on all interaction terms, and e
 
 ```{r}
 #Final model selected in the model building process:
-aids.aic1 <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age,data = AIDS)
+aids.aic1 <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age,data = AIDS)
 aids.aic1 %>% tidy()
 aids.aic1 %>% glance()
 ```
@@ -174,12 +175,16 @@ ggsurvplot(survfit(Surv(time,censor == 1) ~ ivgrp, data = AIDS), fun = "cloglog"
     
 ### 3.The Model
 ```{r}
-aids.aic1 <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age,data = AIDS)
+aids.aic1 <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age,data = AIDS)
 aids.aic1 %>% tidy()
 aids.aic1 %>% glance()
 ```
-####3.1 Interpretation of the coefficients
-  $\beta_1=-0.72240923$ says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.72240923$=0.486 compared to the control group.
-  $\beta_2=-0.26328558$ says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.26328558$=0.769 compared to the control group.
-  $\beta_3=-0.05905275$ says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.05905275$=0.0.943 compared to the control group.
+####3.1 Interpretation of the coefficients and model results
+  $\beta_1=-0.72321240$ says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.72321240$=0.485 compared to the control group.
+  $\beta_2=-0.53324708$ says that the hazard of development of AIDS or dying for people who had IV drug consumption before is smaller by a factor of $1/e^.53324708$=0.587 compared to those who never had IV drug consumption before.
+  $\beta_3=-0.05911936$ says that the hazard of development of AIDS or dying decreases by a factor of $1/e^.05911936$=0.943 for a one unit increase in Karnofsky Performance Scale.
+  $\beta_4=-0.01514841$ says that the hazard of development of AIDS or dying decreases by a factor of $1/e^.01514841$=0.985 for a one unit increase in baseline CD4 count.
+  $\beta_5=0.02179354	$ says that the hazard of development of AIDS or dying increases by a factor of $e^.02179354	$=1.022 for a one unit increase in age.
+
+The result of survival analysis suggests that IDV treatment decreases the hazard of development of AIDS or dying by a factor of more than half (0.485) compared to treatments without IDV, holding all other conditons equal. We can also conclude that among all the variables in the model, treatment that includes IDV decreases the hazard of development of AIDS or dying the most. Therefore, IDV is an effective treatment on decreasing hazard of development of AIDS or dying.
 
