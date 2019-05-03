@@ -182,12 +182,12 @@ aids.aic1 %>% tidy()
 aids.aic1 %>% glance()
 ```
 ####Interpretation of the coefficients and model results  
-  $\beta_1=-0.72321240$ says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.72321240$=0.485 compared to the control group.  
+  $\beta_1=-0.72321240$ says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.72321240$=0.485 compared to the control group.   
   $\beta_2=-0.53324708$ says that the hazard of development of AIDS or dying for people who had IV drug consumption before is smaller by a factor of $1/e^.53324708$=0.587 compared to those who never had IV drug consumption before.  
   $\beta_3=-0.05911936$ says that the hazard of development of AIDS or dying decreases by a factor of $1/e^.05911936$=0.943 for a one unit increase in Karnofsky Performance Scale.  
   $\beta_4=-0.01514841$ says that the hazard of development of AIDS or dying decreases by a factor of $1/e^.01514841$=0.985 for a one unit increase in baseline CD4 count.  
   $\beta_5=0.02179354	$ says that the hazard of development of AIDS or dying increases by a factor of $e^.02179354	$=1.022 for a one unit increase in age.  
 
 ###Conclusion
-The result of survival analysis suggests that IDV treatment decreases the hazard of development of AIDS or dying by a factor of more than half (0.485) compared to treatments without IDV, holding all other conditons equal. We can also conclude that among all the variables in the model, treatment that includes IDV decreases the hazard of development of AIDS or dying the most. Therefore, IDV is an effective treatment on decreasing hazard of development of AIDS or dying.
+  We found in our project that besides treatment, the patient's iv drug use history, age, as well as his basline CD4 level are all significant in predicting the time to event (the development of AIDS or death)The result of survival analysis suggests that IDV treatment decreases the hazard of development of AIDS or dying by a factor of more than half (0.485) compared to treatments without IDV, holding all other conditons equal. We can also conclude that among all the variables in the model, treatment that includes IDV decreases the hazard of development of AIDS or dying the most. Therefore, IDV is an effective treatment on decreasing hazard of development of AIDS or dying.
 
