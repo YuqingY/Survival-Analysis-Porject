@@ -171,7 +171,7 @@ ggsurvplot(survfit(Surv(time,censor == 1) ~ agegrp, data = AIDS), fun = "cloglog
 ggsurvplot(survfit(Surv(time,censor == 1) ~ ivgrp, data = AIDS), fun = "cloglog")
 ```
 ####2.3 Interpretation on PH Assumption
-    Base on the cox.zph test as well as the graph, we conclude that we can assume proportional hazard and proceed to our model. According to the result of the cox.zph test, none of the variables has a p-value less than 0.05, hence we fail to reject the null hypothesis. In addition to the cox.zph test, the graph shows that the lines are mostly parallel, We conclude that these variables are *not* time-dependent variables, as demonstrated below.   
+    Base on the cox.zph test as well as the graph, we conclude that we can assume proportional hazard and proceed to our model. According to the result of the cox.zph test, none of the variables has a p-value less than 0.05, hence we fail to reject the null hypothesis. In addition to the cox.zph test, the graph shows that the lines are mostly parallel, We conclude that these variables are *not* time-dependent variables, as demonstrated above.   
     
 ##Result   
 ###The Model
