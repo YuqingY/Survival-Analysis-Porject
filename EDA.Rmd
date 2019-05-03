@@ -23,7 +23,7 @@ AIDS$cd4grp <- floor(AIDS$cd4/50)
 AIDS$agegrp <- floor(AIDS$age/10)
 AIDS$ivgrp <- floor(AIDS$ivdrug/2)
 ```
-```{r}
+```{r, include=FALSE}
 summary(AIDS$age)
 summary(AIDS$time_d)
 AIDS$SurvObj <- with( AIDS, Surv(time_d, censor == 0))
@@ -31,37 +31,36 @@ km.AIDS <- survfit(SurvObj ~ 1, data = AIDS, conf.type = "log-log")
 autoplot(km.AIDS)
 ```
 ##Introduction
-  For patients carrying human immunodeficiency virus type 1 (HIV-1), perhaps the most important question for them is how can they prolong their life before the de. 
-  To answer this question, we use the data from a double-blind, placebo-controlled trial that compared the three-drug regimen of indinavir (IDV), open-label zidovudine (ZDV) or stavudine (d4T) and lamivudine (3TC) with the two-drug regimen of zidovudine or stavudine and lamivudine in HIV-infected patients (Hammer et al., 1997). Besides having the treatment method, this dataset also has a lot of other information about the patients, including their age, sex, race, IV drug use history, hemophiliac, Karnofsky performance scale, as well as baseline CD4 count. Using the data, we want to know what variables contribute to a longer time to event (development of AIDS or death) and use those variables to create a model that predicts the time to the development of the AIDS or death for HIV-1 patients.
-  We choose to use a Cox proportional hazard model to predict the time to event. We use the AIC method for model selection and assume proportional hazard, which is also tested in the report.
+  In 1997, A group of scientists in America did a double-blind, placebo-controlled trial that compared the three-drug regimen of indinavir (IDV), open-label zidovudine (ZDV) or stavudine (d4T) and lamivudine (3TC) with the two-drug regimen of zidovudine or stavudine and lamivudine in HIV-infected patients (Hammer et al., 1997). The study found that adding IDV to the original two drug regimen slows down the progression of AIDS-defining event significantly.  
+  Besides information on the treatment methods, the original dataset from the study also has a lot of other information about the patients, including their age, sex, race, IV drug use history, hemophiliac, Karnofsky performance scale, as well as baseline CD4 count. However, it was not clear in the study how variables other than the different treatment method affects the progression of AIDS-defining event. In this project, we tried to find those variables other than the treatment method that could possibly slow down the progression of AIDS for HIV-1 patients and used those variables found to investigate how the three-drug regimen compares to the two-drug regimen in slowing the progression of AIDS, while controlling other significant variables.   
+  The questions we tried to answer in this projects are:  
+  1. Are there any other variables other than the IDV treatment methods that significantly affect the progression of AIDS/death?  
+  2. If yes, how does the three-drug regimen compares to the two-drug regimen in affecting the progression of AIDS and death while controlling those significant variables?  
+  To answer those questions, we tried to reject the null hypothesis is that none of the other variables are significant in affecting the progression of AIDS. We choose to build a Cox Proportional Hazard model to evaluate how each variable in the dataset affect the time to event(the development of AIDS or death). We use the AIC and BIC methods to assess the significance level of the variables for model building. We assume proportional hazard, which is also tested in the project, and use the final Cox Proportional Hazard model to assess the effect of adding IDV on slowing down the progression of AIDS.  
 
 ##Methods
   We use a dataset that has 851 patients information, and use AIC model building technique to select the variables that best predict the time to event (development of AIDS or death) from a groups of 11 variables, including age, sex, race, IV drug history, hemophiliac, Karnofsky performance score, baseline CD4 level, as well as months of prior ZDV use. We also looked at possible interaction of variables but decided against interaction base on large p-values. Using the variables selected, we test the Proportional Hazard assumption and build a Cox Proportional Hazard Model that we believe best predict the time to event. The primary endpoint was the time to the development of the acquired immunodeficiency syndrome (AIDS) or death.
-  
-##Result
-
 ###1. Deriving/detailing AIC&BIC for model seleciton on Cox PH (Helen)
-
-###2.1 Introduction (An overview of Christensen, 2018)
+####1.1 Introduction (An overview of Christensen, 2018)
   Akaike (1974) introduced the first information criterion, the Akaike Information
 Criterion (AIC). AIC was based on Kullback-Leibler (K-L) distance (Kullback & Leibler, 1951), which connected information is a way of conceptualizing the distance, or discrepancy, between two models: f(x), the “true” or “generating” model from which actual observations emerge, and g(x), a model given by the researcher to predict the population. K-L distance can be understood as the information lost
 when g(x) is used to approximate f(x). If g(x) is exactly the same as f(x), then the K-L distance between the two models is zero.In practice, the “true” model is unknown, so the absolute K-L distance between f(x) and g(x) is impossible to compute. Yet relative distances can be computed when we are evaluating two or more prediction models. Akaike’s (1974) key insight was that maximum likelihood estimation, with some correction based on the number of parameters in the model, is the expected K-L distance.
 
-###1.1.1 Definition and derivation of AIC & BIC
+#####1.1.1 Definition and derivation of AIC & BIC
     AIC: Akaike’s Information Criteria =  −2ln likelihood + 2p
     BIC: Bayesian Information Criteria =  −2ln likelihood + pln(n)
     where p is the number of estimated parameters (the number of explanatory variables plus 1) and n is the sample size. Likelihood is evaluated at Maximum Likelihood Estimator. AIC and BIC measure the model's generalizability.Both techniques suggest choosing a model with the smallest AIC or BIC value. Information criteria in general measures the information lost when we use a statistical model to approximate the true model. Thus, the less information is lost during this process, the better the approximating model is. 
     The derivation of AIC and BIC is based on maximum likelihood estimation. With some correction based on the number of parameters in the model to MLE will be the expected K-L distance. We want the likelihood to be maximized because that says that the model describes our data well. We therefore subtract 2 times the ln likelihood to the expected K-L distance because higher likelihood means that our model fits the data better, and thus the information lost is less. To avoid overfitting the model, Akaike added 2 times the number of estimated parameters back to the K-L distance to account for the number of parameters in the model. The addition of 2p will increase the K-L distance, and thus works as a punishment of extra parameters estimated to avoid overfitting. BIC suggests that the adjustment made is p*ln(n) to both account for the effect of number of parameters estimated and the sample size. 
     
     
-###1.1.2 Resources
+#####1.1.2 Resources
     I came to know this concept from our lecture's brief introduction to AIC and BIC when we talked about model building.
     I learned more about information criteria in model selection through Christensen(UCLA)'s publication
     https://www.sas.com/content/dam/SAS/support/en/sas-global-forum-proceedings/2018/2587-2018.pdf
     R codes and BeSS Package: https://cran.r-project.org/web/packages/BeSS/BeSS.pdf
-###1.1.3 Challenges
+#####1.1.3 Challenges
     It is challenging to understand the application of AIC/BIC in Cox PH model selection and get the R codes to work.
-###1.2 Model selection using AIC
+####1.2 Model selection using AIC
 ```{r, warning=FALSE}
 #Forward Selection using AIC 
 aids.aic <- coxph(Surv(time,censor == 1) ~ 1,data = AIDS)
@@ -83,7 +82,7 @@ aids.aic1 <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age,data
 aids.aic1 %>% tidy()
 aids.aic1 %>% glance()
 ```
-###1.3 Model selection using BIC
+####1.3 Model selection using BIC
 ```{r, warning=FALSE}
 #Forward Selection using BIC
 dim(AIDS)
@@ -107,10 +106,10 @@ aids.bic1 %>% tidy()
 aids.bic1 %>% glance()
 ```
 
-###1.4 Interpretation 
+####1.4 Interpretation 
 Given the results of AIC and BIC model selection methods, we decide to further work on the final model suggested by AIC selection, which includes the variables "tx", "ivdrug", "karnof", "cd4", and "age". This is because BIC suggested a model with only three variables but we want to keep a reasonable number of variables in our preliminary model to have enough interaction to build a more refined model. 
 
-###1.5 Model Selection with Interaction
+####1.5 Model Selection with Interaction
 Using the results from AIC model selection, we want to further build our model including terms of interaction through backwar selection. We decided the interaction terms based on their correlation and medical relevance. 
 
 ```{r}
@@ -136,7 +135,7 @@ aids.interaction <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + a
 aids.interaction %>% tidy()
 aids.interaction %>% glance()
 ```
-###1.6 Conclusion
+####1.6 Conclusion
 Since our interaction model gives large p-values on all interaction terms, and even larger p-values of our original variables than our AIC model, we decide to not include interaction in our model and procede with the AIC model, which is our final model built:
 
 ```{r}
@@ -149,8 +148,8 @@ aids.aic1 %>% glance()
 ###2. Investigation of PH assumption (Rachel)
 ####2.1 Introduction 
 #####2.1.1 What is PH Assumption, and why it is important?
-    Proportional Harzard(PH) Assumption is the assumption that any two groups in the study must have hazard functions that are proportional over time (i.e. have parallel curve). A non-proportional hazard means that there is an interation between our independent variable and time, therefore we need to do more work and be more careful when designing our model.
-#####2.1.2 Resources
+    Proportional Harzard(PH) Assumption is the assumption that any two groups in the study must have hazard functions that are proportional over time (i.e. have parallel curve). A non-proportional hazard means that there is an interation between our independent variable and time, therefore we need to do more work and be more careful when designing our model.  
+#####2.1.2 Resources 
     My knowledge of the concept of PH Assumption mainly comes from class lectures. I will use r documentation(linked below) as well as the UCLA survival to learn about the cox.zph function.
     https://www.rdocumentation.org/packages/survival/versions/2.43-3/topics/cox.zph
 #####2.1.3 Challenges
@@ -168,23 +167,24 @@ ggsurvplot(survfit(Surv(time,censor == 1) ~ tx, data = AIDS), fun = "cloglog")
 ggsurvplot(survfit(Surv(time,censor == 1) ~ agegrp, data = AIDS), fun = "cloglog")
 ggsurvplot(survfit(Surv(time,censor == 1) ~ ivgrp, data = AIDS), fun = "cloglog")
 ```
-
-####2.3 Interpretation
-    Base on the cox.zph test as well as the graph, we conclude that we can assume proportional harzard and proceed to our model.
+####2.3 Interpretation on PH Assumption
+    Base on the cox.zph test as well as the graph, we conclude that we can assume proportional harzard and proceed to our model.  
     
-    
-### 3.The Model
+##Result   
+###The Model
+  Based on the 
 ```{r}
 aids.aic1 <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age,data = AIDS)
 aids.aic1 %>% tidy()
 aids.aic1 %>% glance()
 ```
-####3.1 Interpretation of the coefficients and model results
-  $\beta_1=-0.72321240$ says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.72321240$=0.485 compared to the control group.
-  $\beta_2=-0.53324708$ says that the hazard of development of AIDS or dying for people who had IV drug consumption before is smaller by a factor of $1/e^.53324708$=0.587 compared to those who never had IV drug consumption before.
-  $\beta_3=-0.05911936$ says that the hazard of development of AIDS or dying decreases by a factor of $1/e^.05911936$=0.943 for a one unit increase in Karnofsky Performance Scale.
-  $\beta_4=-0.01514841$ says that the hazard of development of AIDS or dying decreases by a factor of $1/e^.01514841$=0.985 for a one unit increase in baseline CD4 count.
-  $\beta_5=0.02179354	$ says that the hazard of development of AIDS or dying increases by a factor of $e^.02179354	$=1.022 for a one unit increase in age.
+####Interpretation of the coefficients and model results  
+  $\beta_1=-0.72321240$ says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.72321240$=0.485 compared to the control group.  
+  $\beta_2=-0.53324708$ says that the hazard of development of AIDS or dying for people who had IV drug consumption before is smaller by a factor of $1/e^.53324708$=0.587 compared to those who never had IV drug consumption before.  
+  $\beta_3=-0.05911936$ says that the hazard of development of AIDS or dying decreases by a factor of $1/e^.05911936$=0.943 for a one unit increase in Karnofsky Performance Scale.  
+  $\beta_4=-0.01514841$ says that the hazard of development of AIDS or dying decreases by a factor of $1/e^.01514841$=0.985 for a one unit increase in baseline CD4 count.  
+  $\beta_5=0.02179354	$ says that the hazard of development of AIDS or dying increases by a factor of $e^.02179354	$=1.022 for a one unit increase in age.  
 
+###Conclusion
 The result of survival analysis suggests that IDV treatment decreases the hazard of development of AIDS or dying by a factor of more than half (0.485) compared to treatments without IDV, holding all other conditons equal. We can also conclude that among all the variables in the model, treatment that includes IDV decreases the hazard of development of AIDS or dying the most. Therefore, IDV is an effective treatment on decreasing hazard of development of AIDS or dying.
 
