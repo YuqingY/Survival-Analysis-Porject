@@ -175,15 +175,19 @@ ggsurvplot(survfit(Surv(time,censor == 1) ~ ivdrug, data = AIDS), fun = "cloglog
     
 ### 3.The Model
 ```{r}
-aids.aic1 <- coxph(Surv(time,censor == 1) ~ tx + ivdrug + karnof + cd4 + age,data = AIDS)
+aids.aic1 <- coxph(Surv(time,censor == 1) ~ tx + ivgrp + karnof + cd4 + age,data = AIDS)
 aids.aic1 %>% tidy()
 aids.aic1 %>% glance()
 ```
-####3.1 Interpretation of the coefficients
-  $\beta_1=-0.72240923$ says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.72240923$=0.486 compared to the control group.
-  $\beta_2=-0.26328558$ says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.26328558$=0.769 compared to the control group.
-  $\beta_3=-0.05905275$ says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.05905275$=0.0.943 compared to the control group.
+####3.1 Interpretation of the coefficients and model results
+  $\beta_1=-0.72321240$ says that the hazard of development of AIDS or dying for the treatment group is smaller by a factor of $1/e^.72321240$=0.485 compared to the control group.
+  $\beta_2=-0.53324708$ says that the hazard of development of AIDS or dying for people who had IV drug consumption before is smaller by a factor of $1/e^.53324708$=0.587 compared to those who never had IV drug consumption before.
+  $\beta_3=-0.05911936$ says that the hazard of development of AIDS or dying decreases by a factor of $1/e^.05911936$=0.943 for a one unit increase in Karnofsky Performance Scale.
+  $\beta_4=-0.01514841$ says that the hazard of development of AIDS or dying decreases by a factor of $1/e^.01514841$=0.985 for a one unit increase in baseline CD4 count.
+  $\beta_5=0.02179354	$ says that the hazard of development of AIDS or dying increases by a factor of $e^.02179354	$=1.022 for a one unit increase in age.
 
+The result of survival analysis suggests that IDV treatment decreases the hazard of development of AIDS or dying by a factor of more than half (0.485) compared to treatments without IDV, holding all other conditons equal. We can also conclude that among all the variables in the model, treatment that includes IDV decreases the hazard of development of AIDS or dying the most. Therefore, IDV is an effective treatment on decreasing hazard of development of AIDS or dying.
+ 
 ##Exploration
 ```{r}
 #Backward Selection
